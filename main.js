@@ -1,4 +1,7 @@
 //Made By BioShot\\
+
+
+//SECTION: 1\\
 const express = require("express");
 const crypto = require('crypto');
 const cors = require('cors');
@@ -12,6 +15,9 @@ var app = express();
 app.use(cors({
     origin: '*'
 }));
+
+
+//SECTION: 2\\
 var sessions = []
 var activeSessions = [];
 var sessionHashes = [];
@@ -41,6 +47,10 @@ const generatePassword = (
       return acc;
     }
 
+
+//SECTION 4:\\
+
+
 function genSession(req,res){
   var sessionLetters = generatePassword();
   var sessionCode = "";
@@ -67,9 +77,10 @@ function genSession(req,res){
   }
   }
 }
+//SECTION: 5\\
 app.get('/newSession', (req,res)=>{
   var sessionInfo = JSON.parse(req.query.sessionInfo);
-  genSession(req,res);
+  genSession(req,res); //CALL $SECTION4\\
 
 })
 function closeThread(req,res){
@@ -78,6 +89,7 @@ function closeThread(req,res){
   },3000)
 }
 
+//SECTION: 6\\
 app.get('/session', (req,res)=>{
   var sessionToken = req.query.sessionToken;
   var headerSent = false;
@@ -101,8 +113,9 @@ app.get('/session', (req,res)=>{
           .then (response => res.send(response.data));
 
         }else if(req.query.close == 1){
-          res.send("Client Disconnected... Closing In 3 seconds...");
-          closeThread();
+          axios.get(`http://192.168.190.1:32012/system?close=1`)
+            .then (response => res.send(response.data));
+
         }
 
 
@@ -120,6 +133,8 @@ app.get('/session', (req,res)=>{
 })
 
 
+
+//SECTON: 5\\
 app.listen(8080, ()=>{
   console.log("server up!");
 })
